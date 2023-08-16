@@ -1,3 +1,4 @@
+const logger = require("../../logs/logger");
 const Question = require("../../models/question");
 
 // search question
@@ -17,19 +18,21 @@ exports.searchQuestion = async (req, res) => {
     ]);
 
     if (!searchedData) {
+      logger.error("No Data Found");
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+    logger.log("info", "Question searched Successfully!!");
     return res.status(200).json({
-      status: 200,
-      message: "Qustion searched Successfully",
+      status: "Success",
+      message: "Qustion searched Successfully!!",
       data: searchedData,
     });
   } catch (e) {
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
       data: e,
     });

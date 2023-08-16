@@ -1,15 +1,13 @@
 const express = require("express");
 
 const signinRoutes = express.Router();
-const { check } = require("express-validator");
 const signinController = require("./signin.controller");
+const validator = require("../../../middleware/validator");
 
 signinRoutes.post(
   "/signin",
-  [
-    check("emailId").trim().isEmail().withMessage("Valid email is required"),
-    check("password").notEmpty().withMessage("Password is required"),
-  ],
+  validator.signInValidation(),
+  validator.validate,
   signinController.signIn,
 );
 signinRoutes.get("/userrole/:id", signinController.userRole);

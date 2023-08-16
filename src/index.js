@@ -4,9 +4,9 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
-const serverless = require("serverless-http");
 const route = require("./route");
 const connectToDatabase = require("./config");
+const logger = require("./logs/logger");
 
 connectToDatabase();
 
@@ -40,4 +40,8 @@ app.options(
   }),
 );
 
-module.exports.handler = serverless(app);
+// module.exports.handler = serverless(app);
+
+app.listen(4444, () => {
+  logger.log("info", "Connected to server");
+});

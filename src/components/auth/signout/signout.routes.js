@@ -9,14 +9,14 @@ signoutRoutes.post("/signout", (req, res) => {
   res.setHeader("Set-Cookie", cookieString);
 
   res.status(200).json({
-    statusCode: 200,
+    statusCode: "Success",
     headers: {
       "Set-Cookie": "signout",
       "Content-Type": "application/json",
       path: "/users",
     },
     body: {
-      status: 200,
+      status: "Success",
       message: "Signed Out succefully",
       data: {
 

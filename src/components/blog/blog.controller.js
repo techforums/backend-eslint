@@ -1,5 +1,6 @@
 const { Request, Response } = require("express"); // Import the Request and Response types
 const Blog = require("../../models/blog");
+const logger = require("../../logs/logger");
 /**
  * Get all posted blogs
  * @param {Request} req - The request object
@@ -51,8 +52,14 @@ exports.blogs = async (req, res) => {
     ];
 
     const blogs = await Blog.aggregate(pipeline);
-    res.json(blogs);
+    logger.log("info", "Blogs Read successfully");
+    return res.status(201).json({
+      status: "Success",
+      message: "Blogs Read successfully",
+      data: blogs,
+    });
   } catch (error) {
+    logger.log("error", error);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -66,7 +73,7 @@ exports.blog = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid blog id",
     });
   }
@@ -79,18 +86,20 @@ exports.blog = async (req, res) => {
 
     if (!blog) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Blog not found!",
       });
     }
+    logger.log("info", "Blog Read successfully");
     return res.status(201).send({
-      status: 201,
+      status: "Success",
       message: "Succesfully got the Blog",
       data: blog,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -103,22 +112,6 @@ exports.blog = async (req, res) => {
  */
 exports.createBlog = async (req, res) => {
   const { title, content } = req.body;
-  if (Object.keys(req.body).length === 0) {
-    return res.status(406).json({
-      status: 406,
-      message: "Data not Found, Payload Not Acceptable",
-    });
-  }
-  if (title === undefined) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter the title" });
-  }
-  if (content === undefined) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter the content" });
-  }
   const { userId } = req;
   const blog = new Blog({
     userId,
@@ -128,14 +121,16 @@ exports.createBlog = async (req, res) => {
   try {
     Blog;
     await blog.save();
+    logger.log("info", "Blogs posted successfully");
     res.status(201).json({
-      status: 201,
+      status: "Success",
       message: "Blog posted successfully",
       data: blog,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -150,7 +145,7 @@ exports.getBlog = async (req, res) => {
   const { userId } = req.params;
   if (userId.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid userId",
     });
   }
@@ -162,18 +157,19 @@ exports.getBlog = async (req, res) => {
     ]);
     if (!blog) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data not Found",
       });
     }
     res.status(200).json({
-      status: 200,
+      status: "Success",
       message: " Blog get successfully",
       data: blog,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
       data: err,
     });
@@ -194,8 +190,9 @@ exports.getBlogTitle = async (req, res) => {
     }));
     return res.status(201).json({ blogs: blogsData });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -210,7 +207,7 @@ exports.deleteBlog = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid blog id",
     });
   }
@@ -218,18 +215,20 @@ exports.deleteBlog = async (req, res) => {
     const deleteblog = await Blog.findByIdAndDelete(id);
     if (!deleteblog) {
       res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Already deleted!",
       });
     } else {
+      logger.log("info", "Blogs deleted successfully");
       res.status(201).send({
-        status: 201,
+        status: "Success",
         message: "Succesfully deleted a blog",
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -244,7 +243,7 @@ exports.updateBlog = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid question id",
     });
   }
@@ -256,19 +255,21 @@ exports.updateBlog = async (req, res) => {
 
     if (!updateblog) {
       res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Blog not found!",
       });
     } else {
+      logger.log("info", "Blogs updated successfully");
       res.status(201).send({
-        status: 201,
+        status: "Success",
         message: "Succesfully updated a blog",
         data: updateblog,
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }

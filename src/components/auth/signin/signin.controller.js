@@ -1,29 +1,20 @@
 const crypto = require("crypto");
-const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const User = require("../../../models/user");
 const UserRole = require("../../../models/userRole");
+const logger = require("../../../logs/logger");
 require("dotenv").config();
 
 module.exports = {
   signIn: async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          status: 400,
-          message: "Validation error",
-          errors: errors.array(),
-        });
-      }
-
       const { emailId, password } = req.body;
       const { salt } = process.env;
       const user = await User.findOne({ emailId });
 
       if (!user) {
         return res.status(401).json({
-          status: 401,
+          status: "Fail",
           message: "Incorrect Email or password",
         });
       }
@@ -38,15 +29,16 @@ module.exports = {
 
         const cookieString = `jwt=${token}; HttpOnly; SameSite=None; Secure; Expires=${expirationTime.toUTCString()};`;
         res.setHeader("Set-Cookie", cookieString);
+        logger.log("info", "Signed in successfully!!!");
         return res.status(200).json({
-          statusCode: 200,
+          statusCode: "Success",
           headers: {
             "Set-Cookie": cookieString,
             "Content-Type": "application/json",
             path: "/users",
           },
           body: {
-            status: 200,
+            status: "Success",
             message: "Signed in successfully",
             data: {
               _id: user._id,
@@ -56,13 +48,15 @@ module.exports = {
           },
         });
       }
+      logger.log("error", "Incorrect Email or password");
       return res.status(401).json({
-        status: 401,
+        status: "Fail",
         message: "Incorrect Email or password",
       });
     } catch (err) {
+      logger.log("error", err);
       return res.status(500).json({
-        status: 500,
+        status: "Fail",
         message: "Server Error",
       });
     }
@@ -75,7 +69,7 @@ module.exports = {
 
       if (!user) {
         return res.status(404).json({
-          status: 404,
+          status: "Fail",
           message: "User not found",
         });
       }
@@ -84,14 +78,14 @@ module.exports = {
       const userRole = await UserRole.findOne({ _id: role });
 
       return res.status(200).json({
-        status: 200,
+        status: "Success",
         userRole: userRole.roleName,
       });
     } catch (err) {
       if (err.name === "CastError" && err.kind === "ObjectId") {
         return res.status(400).json({
-          status: 400,
-          message: "Invalid Id ",
+          status: "Fail",
+          message: "Invalid Id",
         });
       }
       return res.status(500).json({

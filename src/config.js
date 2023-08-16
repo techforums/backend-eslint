@@ -1,13 +1,20 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-undef */
+/* eslint-disable prefer-template */
+/* eslint-disable no-sequences */
 const mongoose = require("mongoose");
+const logger = require("./logs/logger");
 
-exports.connectToDatabase = async () => {
+(connectToDatabase = async () => {
   try {
     await mongoose.connect(process.env.mongoDbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Connected to database");
+    logger.info("Connected to database");
   } catch (err) {
-    console.log(`Error connecting to database${err}`);
+    logger.error("Error connecting to database" + err);
   }
-};
+}),
+// eslint-disable-next-line no-undef
+(module.exports = connectToDatabase);

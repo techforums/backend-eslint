@@ -1,29 +1,9 @@
 const Answer = require("../../models/answer");
+const logger = require("../../logs/logger");
 
 // creates an answer to that question
 exports.addAnswer = async (req, res) => {
   const { answer, userId, questionId } = req.body;
-  if (Object.keys(req.body).length === 0) {
-    return res.status(406).json({
-      status: 406,
-      message: "Data not Found, Payload Not Acceptable",
-    });
-  }
-  if (answer === undefined) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter the answer" });
-  }
-  if (userId === undefined) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter the userId" });
-  }
-  if (questionId === undefined) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter the questionId" });
-  }
   const addanswer = new Answer({
     userId,
     questionId,
@@ -32,14 +12,16 @@ exports.addAnswer = async (req, res) => {
   try {
     Answer;
     await addanswer.save();
+    logger.log("info", "Answer Posted successfully");
     return res.status(201).json({
-      status: 201,
+      status: "Success",
       message: "Answer Posted successfully",
       data: addanswer,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      satus: 500,
+      satus: "Fail",
       error: "Server Error",
     });
   }
@@ -58,19 +40,20 @@ exports.getAnswerByquestionId = async (req, res) => {
       },
     ]);
     res.status(201).json({
-      status: 201,
-      message: "Answer get successfully",
+      status: "Success",
+      message: "Answer got successfully",
       data: getanswer,
     });
     if (questionId.length !== 24) {
       return res.status(400).json({
-        status: 400,
+        status: "Fail",
         message: "Invalid question id",
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -81,7 +64,7 @@ exports.editAnswer = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid answer id",
     });
   }
@@ -91,18 +74,19 @@ exports.editAnswer = async (req, res) => {
     });
     if (!editanswer) {
       res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Answer not found",
       });
     } else {
       res.status(201).json({
-        status: 201,
+        status: "Success",
         message: "Answer Updated successfully",
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -113,7 +97,7 @@ exports.deleteAnswer = async (req, res) => {
   const _id = req.params.id;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid answer id",
     });
   }
@@ -126,13 +110,14 @@ exports.deleteAnswer = async (req, res) => {
       });
     } else {
       res.status(201).send({
-        status: 201,
+        status: "Success",
         message: "Answer deleted successfully",
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      satus: 500,
+      satus: "Fail",
       message: "Server Error",
     });
   }
@@ -193,13 +178,14 @@ exports.checkup = async (req, res) => {
       res.status(404).send();
     } else {
       res.status(201).json({
-        message: "success",
+        message: "Success",
         data: totalupvote,
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      satus: 500,
+      satus: "Fail",
       message: "Server Error",
       data: err,
     });
@@ -220,8 +206,9 @@ exports.checkdown = async (req, res) => {
       });
     }
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      satus: 500,
+      satus: "Fail",
       message: "Server Error",
     });
   }

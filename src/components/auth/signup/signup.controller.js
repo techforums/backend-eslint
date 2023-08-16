@@ -1,31 +1,22 @@
 const crypto = require("crypto");
-const { validationResult } = require("express-validator");
 const User = require("../../../models/user");
+const logger = require("../../../logs/logger");
 require("dotenv").config();
 
 module.exports = {
   signUp: async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          status: 400,
-          message: "Validation error",
-          errors: errors.array(),
-        });
-      }
-
       const {
         firstName, lastName, emailId, password,
       } = req.body;
       const existingUser = await User.findOne({ emailId });
       if (existingUser) {
+        logger.log("info", "User already exists");
         return res.status(400).json({
-          status: 400,
+          status: "Fail",
           message: "Email already exists",
         });
       }
-
       const { salt } = process.env;
       const hashedPassword = crypto
         .pbkdf2Sync(password, salt, 1000, 64, "sha512")
@@ -40,15 +31,16 @@ module.exports = {
       });
 
       await user.save();
-
+      logger.log("info", "User Created Successfully");
       return res.status(201).json({
-        status: 201,
+        status: "Success",
         message: "User created successfully",
         data: emailId,
       });
     } catch (err) {
+      logger.log("info", err);
       return res.status(500).json({
-        status: 500,
+        status: "Fail",
         message: "Server Error",
         error: err.message,
       });

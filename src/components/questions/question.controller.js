@@ -1,6 +1,7 @@
 const Question = require("../../models/question");
 const Bookmark = require("../../models/bookmark");
 const Answer = require("../../models/answer");
+const logger = require("../../logs/logger");
 
 // post a question
 exports.createQuestion = async (req, res) => {
@@ -9,30 +10,6 @@ exports.createQuestion = async (req, res) => {
     const { question } = req.body;
     const { questionDescribe } = req.body;
     const { tags } = req.body;
-    if (Object.keys(req.body).length === 0) {
-      return res.status(406).json({
-        status: 406,
-        message: "Data not Found, Payload Not Acceptable",
-      });
-    }
-    if (req.body.question === undefined) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "please enter the question" });
-    }
-    if (req.body.questionDescribe === undefined) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "please enter the questionDescribe" });
-    }
-    if (!Array.isArray(tags)) {
-      return res
-        .status(406)
-        .json({
-          status: 406,
-          message: "tags can't be empty and it must be in Array",
-        });
-    }
     const questionCreated = new Question({
       userId,
       question,
@@ -40,14 +17,16 @@ exports.createQuestion = async (req, res) => {
       questionDescribe,
     });
     await questionCreated.save();
+    logger.log("info", "Question created successfully");
     return res.status(201).json({
-      status: 201,
+      status: "Success",
       message: "Question created successfully",
       data: questionCreated,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
       data: err,
     });
@@ -75,12 +54,13 @@ exports.questionPagination = async (req, res) => {
 
     if (!questionsData) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+    logger.info("response is : ", res);
     return res.status(200).json({
-      status: 200,
+      status: "Success",
       message: "Questions Readed successfully",
       data: questionsData,
       nbHits: questionsData.length,
@@ -89,7 +69,7 @@ exports.questionPagination = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -105,18 +85,20 @@ exports.readQuestions = async (req, res) => {
     ]);
     if (!questionsData) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+    logger.log("info", "Questions Read successfully");
     return res.status(200).json({
-      status: 200,
-      message: "Questions Readed successfully",
+      status: "Success",
+      message: "Questions Read successfully",
       data: questionsData,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -126,7 +108,7 @@ exports.readByIdQuestion = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid question id",
     });
   }
@@ -138,18 +120,20 @@ exports.readByIdQuestion = async (req, res) => {
     ]);
     if (!questionData) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+    logger.log("info", "Question Read Successfully");
     return res.status(200).json({
-      status: 200,
-      message: "Question Readed successfully",
+      status: "Success",
+      message: "Question Read successfully",
       data: questionData,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
       data: err,
     });
@@ -167,18 +151,20 @@ exports.readByIdUser = async (req, res) => {
     ]);
     if (!questionData) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+    logger.log("info", "Question Read Successfully");
     return res.status(200).json({
-      status: 200,
-      message: "Question Readed successfully",
+      status: "Success",
+      message: "Question Read successfully",
       data: questionData,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
       data: err,
     });
@@ -190,7 +176,7 @@ exports.updateQuestion = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid question id",
     });
   }
@@ -201,18 +187,21 @@ exports.updateQuestion = async (req, res) => {
     });
     if (!updateQuestion) {
       return res.status(404).json({
-        status: 404,
+        status: "Fail",
         message: "Data Not Found",
       });
     }
+
+    logger.log("info", "Question Updated Successfully");
     return res.status(200).json({
-      status: 200,
+      status: "Success",
       message: "Question Updated Successfully",
       data: updateQuestion,
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
@@ -223,7 +212,7 @@ exports.deleteQuestion = async (req, res) => {
   const { id } = req.params;
   if (id.length !== 24) {
     return res.status(400).json({
-      status: 400,
+      status: "Fail",
       message: "Invalid question id",
     });
   }
@@ -231,13 +220,15 @@ exports.deleteQuestion = async (req, res) => {
     await Question.findByIdAndDelete(id);
     await Bookmark.deleteMany({ questionId: id });
     await Answer.deleteMany({ questionId: id });
+    logger.log("info", "Question Deleted Successfully");
     return res.status(200).json({
-      status: 200,
+      status: "Success",
       message: "Question Deleted Successfully",
     });
   } catch (err) {
+    logger.log("error", err);
     return res.status(500).json({
-      status: 500,
+      status: "Fail",
       message: "Server Error",
     });
   }
