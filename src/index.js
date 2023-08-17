@@ -11,18 +11,18 @@ const logger = require("./logs/logger");
 connectToDatabase();
 
 const corsOptions = {
-  origin: "http://localhost:4200",
-  withCredentials: true,
-  credentials: true,
-  optionSuccessStatus: 200,
+    origin: "http://localhost:4200",
+    withCredentials: true,
+    credentials: true,
+    optionSuccessStatus: 200,
 };
 
 const allowCrossDomain = (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header("Access-Control-Allow-Methods", "GET,PATCH,PUT, POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
+    res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+    res.header("Access-Control-Allow-Methods", "GET,PATCH,PUT, POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
 };
 
 app.use(allowCrossDomain);
@@ -33,15 +33,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(route);
 app.use(cors(corsOptions));
 app.options(
-  "http://localhost:4200",
-  cors({
-    origin: "http://localhost:4200",
-    credentials: true,
-  }),
+    "http://localhost:4200",
+    cors({
+        origin: "http://localhost:4200",
+        credentials: true,
+    }),
 );
 
 // module.exports.handler = serverless(app);
 
 app.listen(4444, () => {
-  logger.log("info", "Connected to server");
+    logger.log("info", "Connected to server");
 });

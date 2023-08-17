@@ -21,16 +21,16 @@ route.use("/", signupRoutes);
 route.use("/forgotpassword", forgotpasswordRoutes);
 
 route.use(
-  "/users",
-  signoutRoutes,
-  signinRoutes,
-  bookmarkRoutes,
-  questionRoutes,
-  serchRoutes,
-  blogRoutes,
-  documentRoutes,
-  answerRoutes,
-  tagsRoutes,
+    "/users",
+    signoutRoutes,
+    signinRoutes,
+    bookmarkRoutes,
+    questionRoutes,
+    serchRoutes,
+    blogRoutes,
+    documentRoutes,
+    answerRoutes,
+    tagsRoutes,
 );
 
 route.use("/admin", manageUsersRoutes, tagsRoutes, manageResourcesRoutes);

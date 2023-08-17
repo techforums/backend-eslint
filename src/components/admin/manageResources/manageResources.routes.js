@@ -4,12 +4,12 @@ const manageResourcesRoutes = express.Router();
 const manageResourcesController = require("./manageResources.controller");
 
 manageResourcesRoutes.patch(
-  "/approveblog/:id",
-  manageResourcesController.approveBlog,
+    "/approveblog/:id",
+    manageResourcesController.approveBlog,
 );
 manageResourcesRoutes.patch(
-  "/approvedoc/:id",
-  manageResourcesController.approveDocument,
+    "/approvedoc/:id",
+    manageResourcesController.approveDocument,
 );
 
 manageResourcesRoutes.get("/blog", manageResourcesController.blogs);

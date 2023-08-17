@@ -5,10 +5,10 @@ const validator = require("../../../middleware/validator");
 const signupController = require("./signup.controller");
 
 signupRoutes.post(
-  "/signup",
-  validator.signUpValidation(),
-  validator.validate,
-  signupController.signUp,
+    "/signup",
+    validator.signUpValidation(),
+    validator.validate,
+    signupController.signUp,
 );
 
 module.exports = signupRoutes;
