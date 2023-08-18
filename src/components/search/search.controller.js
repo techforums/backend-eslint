@@ -1,7 +1,15 @@
 const logger = require("../../logs/logger");
 const Question = require("../../models/question");
 
-// search question
+/**
+ * Search for questions based on specified tags.
+ *
+ * @param {Object} req - The request object.
+ * @param {string} req.query.tags - The tags to search for in questions.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response containing the searched questions.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 exports.searchQuestion = async (req, res) => {
     try {
         const question = req.query.tags;

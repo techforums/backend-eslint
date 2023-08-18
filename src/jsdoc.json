@@ -1,6 +1,11 @@
 {
   "source": {
-    "include": ["components", "components/answer","components/auth/forgotpassword"],
+    "include": [
+      "components",
+      "components/answer",
+      "components/auth",
+      "components/bookmark"
+    ],
     "includePattern": ".js$",
     "excludePattern": "(node_modules/|docs)"
   },
@@ -10,7 +15,7 @@
     "monospaceLinks": true
   },
   "opts": {
-    "destination": "./docs/",         
+    "destination": "./docs/",
     "recurse": true
   }
 }

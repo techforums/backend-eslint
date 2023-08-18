@@ -29,41 +29,48 @@
             <pre class="prettyprint source linenums"><code>const Bookmark = require("../../models/bookmark");
 
 /**
+ *Add Bookmark
  *
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
  */
-module.exports = {
-  addBookmark: async (req, res) => {
-    try {
-      const userId = await req.body.userId;
-      const { questionId } = req.body;
-      const addedBookmark = await Bookmark.findOne({ userId, questionId });
-      if (addedBookmark) {
-        await Bookmark.findByIdAndDelete(addedBookmark._id);
-        return res.status(200).json({
-          status: 200,
-          message: "Bookmark removed",
-        });
-      }
-      const bookmark = new Bookmark({ userId, questionId });
-      await bookmark.save();
-      return res.status(201).json({
-        status: 201,
-        message: "Added bookmark",
-        data: bookmark,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        status: 500,
-        message: "Server Error",
+(exports.addBookmark = async (req, res) => {
+  try {
+    const userId = await req.body.userId;
+    const { questionId } = req.body;
+    const addedBookmark = await Bookmark.findOne({ userId, questionId });
+    if (addedBookmark) {
+      await Bookmark.findByIdAndDelete(addedBookmark._id);
+      return res.status(200).json({
+        status: 200,
+        message: "Bookmark removed",
       });
     }
-  },
-
-  getmanageBookmarkById: async (req, res) => {
+    const bookmark = new Bookmark({ userId, questionId });
+    await bookmark.save();
+    return res.status(201).json({
+      status: 201,
+      message: "Added bookmark",
+      data: bookmark,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      message: "Server Error",
+    });
+  }
+}),
+  /**
+   *Get bookmarks
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
+   * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+   */
+  (exports.getmanageBookmarkById = async (req, res) => {
     try {
       const { userId } = req.params;
       const bookmarks = await Bookmark.find({ userId }).populate([
@@ -86,9 +93,16 @@ module.exports = {
         message: "Server Error",
       });
     }
-  },
-
-  getBookmarkByUserId: async (req, res) => {
+  }),
+  /**
+   *Get bookmarks
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
+   * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+   */
+  (exports.getBookmarkByUserId = async (req, res) => {
     const { userId } = req.params;
     if (userId.length !== 24) {
       return res.status(400).json({
@@ -109,8 +123,7 @@ module.exports = {
         message: "Server Error",
       });
     }
-  },
-};
+  });
 </code></pre>
         </article>
     </section>
@@ -121,13 +134,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Downvote">Downvote</a></li><li><a href="global.html#Upvote">Upvote</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#blog">blog</a></li><li><a href="global.html#blogs">blogs</a></li><li><a href="global.html#createBlog">createBlog</a></li><li><a href="global.html#deleteAnswer">deleteAnswer</a></li><li><a href="global.html#deleteBlog">deleteBlog</a></li><li><a href="global.html#editAnswer">editAnswer</a></li><li><a href="global.html#forgotPassword">forgotPassword</a></li><li><a href="global.html#getAnswerByquestionId">getAnswerByquestionId</a></li><li><a href="global.html#getBlog">getBlog</a></li><li><a href="global.html#getBlogTitle">getBlogTitle</a></li><li><a href="global.html#resetPassword">resetPassword</a></li><li><a href="global.html#updateBlog">updateBlog</a></li><li><a href="global.html#userRole">userRole</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Downvote">Downvote</a></li><li><a href="global.html#Upvote">Upvote</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#blog">blog</a></li><li><a href="global.html#blogs">blogs</a></li><li><a href="global.html#createBlog">createBlog</a></li><li><a href="global.html#createQuestion">createQuestion</a></li><li><a href="global.html#deleteAnswer">deleteAnswer</a></li><li><a href="global.html#deleteBlog">deleteBlog</a></li><li><a href="global.html#deleteDocument">deleteDocument</a></li><li><a href="global.html#deleteQuestion">deleteQuestion</a></li><li><a href="global.html#editAnswer">editAnswer</a></li><li><a href="global.html#forgotPassword">forgotPassword</a></li><li><a href="global.html#getAnswerByquestionId">getAnswerByquestionId</a></li><li><a href="global.html#getBlog">getBlog</a></li><li><a href="global.html#getBlogTitle">getBlogTitle</a></li><li><a href="global.html#getBookmarkByUserId">getBookmarkByUserId</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getDocumentuser">getDocumentuser</a></li><li><a href="global.html#getmanageBookmarkById">getmanageBookmarkById</a></li><li><a href="global.html#postDocument">postDocument</a></li><li><a href="global.html#questionPagination">questionPagination</a></li><li><a href="global.html#readByIdQuestion">readByIdQuestion</a></li><li><a href="global.html#readByIdUser">readByIdUser</a></li><li><a href="global.html#readQuestions">readQuestions</a></li><li><a href="global.html#resetPassword">resetPassword</a></li><li><a href="global.html#searchQuestion">searchQuestion</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#updateBlog">updateBlog</a></li><li><a href="global.html#updateQuestion">updateQuestion</a></li><li><a href="global.html#userRole">userRole</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Aug 17 2023 19:09:30 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Aug 18 2023 11:45:06 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

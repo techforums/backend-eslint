@@ -1,6 +1,16 @@
 const Document = require("../../models/doc");
 
-// get all posted documents
+/**
+ * Get all posted documents with pagination and user details.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.query - The query parameters in the request.
+ * @param {number} req.query.pageNumber - The page number for pagination (default: 1).
+ * @param {number} req.query.pageSize - The number of documents per page (default: 5).
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response containing the retrieved documents.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 exports.getDocument = async (req, res) => {
     try {
         const pageNumber = parseInt(req.query.pageNumber, 10) || 1;
@@ -56,7 +66,16 @@ exports.getDocument = async (req, res) => {
     }
 };
 
-// get a specific document
+/**
+ * Get a specific document by its ID along with user details.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The params parameters in the request.
+ * @param {string} req.params.id - The ID of the document.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response containing the retrieved document.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 exports.getDocuments = async (req, res) => {
     const { id } = req.params;
     if (id.length !== 24) {
@@ -91,7 +110,16 @@ exports.getDocuments = async (req, res) => {
     }
 };
 
-// //get document by userId
+/**
+ * Get documents by user ID along with user details.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The params parameters in the request.
+ * @param {string} req.params.userId - The ID of the user whose documents are fetched.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response containing the retrieved documents.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 
 exports.getDocumentuser = async (req, res) => {
     try {
@@ -121,8 +149,16 @@ exports.getDocumentuser = async (req, res) => {
     }
 };
 
-// post a new document
-
+/**
+ * Post a new document.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.file - The uploaded file.
+ * @param {string} req.userId - The ID of the user posting the document.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response indicating the status and outcome of the document posting operation.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 exports.postDocument = async (req, res) => {
     if (!req.file) {
         return res.status(400).json({
@@ -140,7 +176,6 @@ exports.postDocument = async (req, res) => {
             fileType,
             docData,
             userId,
-
         });
         await document.save();
         return res.status(201).json({
@@ -157,7 +192,16 @@ exports.postDocument = async (req, res) => {
     }
 };
 
-// delete an existing document
+/**
+ * Delete a document by its ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The params parameters in the request.
+ * @param {string} req.params.id - The ID of the document to be deleted.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response indicating the status and outcome of the document deletion operation.
+ * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+ */
 exports.deleteDocument = async (req, res) => {
     const { id } = req.params;
     if (id.length !== 24) {

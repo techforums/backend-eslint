@@ -74,6 +74,7 @@ exports.blogs = async (req, res) => {
  * Get a specific blog by its ID.
  *
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
  * @param {string} req.params.id - The ID of the blog.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data.
@@ -155,6 +156,7 @@ exports.createBlog = async (req, res) => {
  * Get blogs by user ID.
  *
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
  * @param {string} req.params.userId - The ID of the user whose blogs are being fetched.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched blogs.
@@ -221,11 +223,11 @@ exports.getBlogTitle = async (req, res) => {
     }
 };
 
-
 /**
  * Delete a blog by its ID.
  *
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
  * @param {string} req.params.id - The ID of the blog to be deleted.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status and message of the delete operation.

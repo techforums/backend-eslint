@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: search/search.controller.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,66 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: search/search.controller.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const logger = require("../../logs/logger");
+const Question = require("../../models/question");
 
+/**
+     * Search for questions based on specified tags.
+     *
+     * @param {Object} req - The request object.
+     * @param {string} req.query.tags - The tags to search for in questions.
+     * @param {Object} res - The response object.
+     * @returns {Object} - The HTTP response containing the searched questions.
+     * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
+     */
+exports.searchQuestion = async (req, res) => {
+    try {
+        const question = req.query.tags;
+        const searchedData = await Question.aggregate([
+            {
+                $search: {
+                    index: "search-question",
+                    text: {
+                        query: question,
+                        path: "question",
+                    },
+                },
+            },
+        ]);
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+        if (!searchedData) {
+            logger.error("No Data Found");
+            return res.status(404).json({
+                status: "Fail",
+                message: "Data Not Found",
+            });
+        }
+        logger.log("info", "Question searched Successfully!!");
+        return res.status(200).json({
+            status: "Success",
+            message: "Qustion searched Successfully!!",
+            data: searchedData,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            status: "Fail",
+            message: "Server Error",
+            data: e,
+        });
+    }
+};
+</code></pre>
+        </article>
+    </section>
 
 
 

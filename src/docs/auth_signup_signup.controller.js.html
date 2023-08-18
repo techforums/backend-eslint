@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: auth/signin/signin.controller.js</title>
+    <title>JSDoc: Source: auth/signup/signup.controller.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: auth/signin/signin.controller.js</h1>
+    <h1 class="page-title">Source: auth/signup/signup.controller.js</h1>
 
     
 
@@ -27,113 +27,57 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
 const User = require("../../../models/user");
-const UserRole = require("../../../models/userRole");
 const logger = require("../../../logs/logger");
 require("dotenv").config();
 
-
 /**
+ *
  * @param {Object} req - The request object.
- * @param {Object} res -The response object.
- * @returns {Object} - The HTTP response containing the status, message, and data of signin
+ * @param {Object} res - The response object.
+ * @returns {Object} - The HTTP response containing the status, message while signing up.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
  */
-(exports.signIn = async (req, res) => {
+exports.signUp = async (req, res) => {
   try {
-    const { emailId, password } = req.body;
-    const { salt } = process.env;
-    const user = await User.findOne({ emailId });
-
-    if (!user) {
-      return res.status(401).json({
+    const { firstName, lastName, emailId, password } = req.body;
+    const existingUser = await User.findOne({ emailId });
+    if (existingUser) {
+      logger.log("info", "User already exists");
+      return res.status(400).json({
         status: "Fail",
-        message: "Incorrect Email or password",
+        message: "Email already exists",
       });
     }
-
+    const { salt } = process.env;
     const hashedPassword = crypto
       .pbkdf2Sync(password, salt, 1000, 64, "sha512")
       .toString("hex");
 
-    if (hashedPassword === user.password) {
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY);
-      const expirationTime = new Date(Date.now() + 12 * 60 * 60 * 1000);
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: hashedPassword,
+      userRole: process.env.userRole,
+    });
 
-      const cookieString = `jwt=${token}; HttpOnly; SameSite=None; Secure; Expires=${expirationTime.toUTCString()};`;
-      res.setHeader("Set-Cookie", cookieString);
-      logger.log("info", "Signed in successfully!!!");
-      return res.status(200).json({
-        statusCode: "Success",
-        headers: {
-          "Set-Cookie": cookieString,
-          "Content-Type": "application/json",
-          path: "/users",
-        },
-        body: {
-          status: "Success",
-          message: "Signed in successfully",
-          data: {
-            _id: user._id,
-            role: user.userRole,
-            name: `${user.firstName} ${user.lastName}`,
-          },
-        },
-      });
-    }
-    logger.log("error", "Incorrect Email or password");
-    return res.status(401).json({
-      status: "Fail",
-      message: "Incorrect Email or password",
+    await user.save();
+    logger.log("info", "User Created Successfully");
+    return res.status(201).json({
+      status: "Success",
+      message: "User created successfully",
+      data: emailId,
     });
   } catch (err) {
-    logger.log("error", err);
+    logger.log("info", err);
     return res.status(500).json({
       status: "Fail",
       message: "Server Error",
+      error: err.message,
     });
   }
-}),
-  /**
-   *
-   * @param {Object} req - The request object.
-   * @param {Object} res - The response object.
-   * @returns {Object} - The HTTP response containing the status, message, and data of userRole.
-   * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
-   */
-  (exports.userRole = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const user = await User.findOne({ _id: id });
-
-      if (!user) {
-        return res.status(404).json({
-          status: "Fail",
-          message: "User not found",
-        });
-      }
-
-      const role = user.userRole;
-      const userRole = await UserRole.findOne({ _id: role });
-
-      return res.status(200).json({
-        status: "Success",
-        userRole: userRole.roleName,
-      });
-    } catch (err) {
-      if (err.name === "CastError" &amp;&amp; err.kind === "ObjectId") {
-        return res.status(400).json({
-          status: "Fail",
-          message: "Invalid Id",
-        });
-      }
-      return res.status(500).json({
-        status: 500,
-        message: `Internal Server Error: ${err.message}`,
-      });
-    }
-  });
+};
 </code></pre>
         </article>
     </section>

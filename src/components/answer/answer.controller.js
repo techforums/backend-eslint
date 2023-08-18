@@ -4,6 +4,7 @@ const logger = require("../../logs/logger");
 /**
  * creates an answer to that question
  * @param {Object} req - The request object.
+ * @param {Object} req.body - The body in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -36,6 +37,8 @@ exports.addAnswer = async (req, res) => {
 /**
  * get answer to that question
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.questionId - The questionId in path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -69,6 +72,7 @@ exports.getAnswerByquestionId = async (req, res) => {
 /**
  * edits the given specific answer
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -107,6 +111,8 @@ exports.editAnswer = async (req, res) => {
 /**
  * deletes the given specific answer
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -134,10 +140,13 @@ exports.deleteAnswer = async (req, res) => {
     }
 };
 
-
 /**
  * post upvotes
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
+ * @param {Object} req.body - The body in the request.
+ * @param {string} req.body.upvotes - The upvotes in body of the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -171,6 +180,10 @@ exports.Upvote = async (req, res) => {
 /**
  * post downvotes
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
+ * @param {Object} req.body - The body in the request.
+ * @param {string} req.body.downvotes - The downvotes in body of the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.

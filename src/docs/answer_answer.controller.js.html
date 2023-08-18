@@ -32,6 +32,7 @@ const logger = require("../../logs/logger");
 /**
  * creates an answer to that question
  * @param {Object} req - The request object.
+ * @param {Object} req.body - The body in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -64,6 +65,8 @@ exports.addAnswer = async (req, res) => {
 /**
  * get answer to that question
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.questionId - The questionId in path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -97,6 +100,7 @@ exports.getAnswerByquestionId = async (req, res) => {
 /**
  * edits the given specific answer
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -135,6 +139,8 @@ exports.editAnswer = async (req, res) => {
 /**
  * deletes the given specific answer
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -166,6 +172,10 @@ exports.deleteAnswer = async (req, res) => {
 /**
  * post upvotes
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
+ * @param {Object} req.body - The body in the request.
+ * @param {string} req.body.upvotes - The upvotes in body of the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -199,6 +209,10 @@ exports.Upvote = async (req, res) => {
 /**
  * post downvotes
  * @param {Object} req - The request object.
+ * @param {Object} req.params - The path parameters in the request.
+ * @param {string} req.params.id - The id in path parameters in the request.
+ * @param {Object} req.body - The body in the request.
+ * @param {string} req.body.downvotes - The downvotes in body of the request.
  * @param {Object} res - The response object.
  * @returns {Object} - The HTTP response containing the status, message, and data of the fetched bookmarks.
  * @throws {Object} - The HTTP response indicating a server error if an exception occurs.
@@ -237,13 +251,13 @@ exports.Downvote = async (req, res) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Downvote">Downvote</a></li><li><a href="global.html#Upvote">Upvote</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#blog">blog</a></li><li><a href="global.html#blogs">blogs</a></li><li><a href="global.html#createBlog">createBlog</a></li><li><a href="global.html#deleteAnswer">deleteAnswer</a></li><li><a href="global.html#deleteBlog">deleteBlog</a></li><li><a href="global.html#editAnswer">editAnswer</a></li><li><a href="global.html#forgotPassword">forgotPassword</a></li><li><a href="global.html#getAnswerByquestionId">getAnswerByquestionId</a></li><li><a href="global.html#getBlog">getBlog</a></li><li><a href="global.html#getBlogTitle">getBlogTitle</a></li><li><a href="global.html#resetPassword">resetPassword</a></li><li><a href="global.html#updateBlog">updateBlog</a></li><li><a href="global.html#userRole">userRole</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Downvote">Downvote</a></li><li><a href="global.html#Upvote">Upvote</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#blog">blog</a></li><li><a href="global.html#blogs">blogs</a></li><li><a href="global.html#createBlog">createBlog</a></li><li><a href="global.html#createQuestion">createQuestion</a></li><li><a href="global.html#deleteAnswer">deleteAnswer</a></li><li><a href="global.html#deleteBlog">deleteBlog</a></li><li><a href="global.html#deleteDocument">deleteDocument</a></li><li><a href="global.html#deleteQuestion">deleteQuestion</a></li><li><a href="global.html#editAnswer">editAnswer</a></li><li><a href="global.html#forgotPassword">forgotPassword</a></li><li><a href="global.html#getAnswerByquestionId">getAnswerByquestionId</a></li><li><a href="global.html#getBlog">getBlog</a></li><li><a href="global.html#getBlogTitle">getBlogTitle</a></li><li><a href="global.html#getBookmarkByUserId">getBookmarkByUserId</a></li><li><a href="global.html#getDocument">getDocument</a></li><li><a href="global.html#getDocuments">getDocuments</a></li><li><a href="global.html#getDocumentuser">getDocumentuser</a></li><li><a href="global.html#getmanageBookmarkById">getmanageBookmarkById</a></li><li><a href="global.html#postDocument">postDocument</a></li><li><a href="global.html#questionPagination">questionPagination</a></li><li><a href="global.html#readByIdQuestion">readByIdQuestion</a></li><li><a href="global.html#readByIdUser">readByIdUser</a></li><li><a href="global.html#readQuestions">readQuestions</a></li><li><a href="global.html#resetPassword">resetPassword</a></li><li><a href="global.html#searchQuestion">searchQuestion</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#updateBlog">updateBlog</a></li><li><a href="global.html#updateQuestion">updateQuestion</a></li><li><a href="global.html#userRole">userRole</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Aug 17 2023 19:09:30 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Aug 18 2023 11:45:06 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
